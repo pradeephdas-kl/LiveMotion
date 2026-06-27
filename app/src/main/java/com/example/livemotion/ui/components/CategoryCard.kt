@@ -28,7 +28,7 @@ fun CategoryCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(120.dp)
+            .height(100.dp)
             .clickable { onClick() },
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
@@ -44,13 +44,13 @@ fun CategoryCard(
         ) {
             Text(
                 text = emoji,
-                fontSize = 30.sp
+                fontSize = 26.sp
             )
 
             Text(
                 text = title,
                 color = Color.White,
-                fontSize = 15.sp,
+                fontSize = 14.sp,
                 fontWeight = FontWeight.SemiBold
             )
         }
