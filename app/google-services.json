@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "773894206320",
+    "project_id": "livemotion-56396",
+    "storage_bucket": "livemotion-56396.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:773894206320:android:7b14c71422cdc7844d95b5",
+        "android_client_info": {
+          "package_name": "com.example.livemotion"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIJOqPvrZYLV71A770qgdDHw_yE7Obo-Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

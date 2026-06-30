@@ -224,13 +224,16 @@ fun ApplyWallpaperBottomSheet(
     onClose: () -> Unit,
     context: android.content.Context
 ) {
+
     val coroutineScope = rememberCoroutineScope()
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
+
         Text(
             text = "Apply Wallpaper",
             style = MaterialTheme.typography.headlineSmall,
@@ -243,80 +246,78 @@ fun ApplyWallpaperBottomSheet(
             title = "Home Screen"
         ) {
 
-            coroutineScope.launch {
+            coroutineScope.launch(Dispatchers.IO) {
 
-                withContext(Dispatchers.IO) {
-                    WallpaperManagerUtil.setHomeWallpaperFromUrl(
-                        context,
-                        imageUrl
-                    )
-                }
-
-                onClose()
-
-                Toast.makeText(
+                WallpaperManagerUtil.setHomeWallpaperFromUrl(
                     context,
-                    "Home wallpaper applied",
-                    Toast.LENGTH_SHORT
-                ).show()
+                    imageUrl
+                )
 
-            }
+                withContext(Dispatchers.Main) {
 
+                    Toast.makeText(
+                        context,
+                        "Home wallpaper applied",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    onClose()
+                }
             }
 
         }
 
-    ApplyOption(
-        emoji = "🔒",
-        title = "Lock Screen"
-    ) {
+        ApplyOption(
+            emoji = "🔒",
+            title = "Lock Screen"
+        ) {
 
-        coroutineScope.launch {
+            coroutineScope.launch(Dispatchers.IO) {
 
-            withContext(Dispatchers.IO) {
                 WallpaperManagerUtil.setLockWallpaperFromUrl(
                     context,
                     imageUrl
                 )
-            }
 
-            onClose()
-
-            Toast.makeText(
-                context,
-                "Lock screen wallpaper applied",
-                Toast.LENGTH_SHORT
-            ).show()
-
-        }
-
-    }
-
-            ApplyOption(
-                emoji = "📱",
-                title = "Home & Lock Screen"
-            ) {
-
-                coroutineScope.launch {
-
-                    withContext(Dispatchers.IO) {
-                        WallpaperManagerUtil.setBothWallpapersFromUrl(
-                            context,
-                            imageUrl
-                        )
-                    }
-
-                    onClose()
+                withContext(Dispatchers.Main) {
 
                     Toast.makeText(
                         context,
-                        "Wallpaper applied successfully",
+                        "Lock wallpaper applied",
                         Toast.LENGTH_SHORT
                     ).show()
 
+                    onClose()
                 }
-
             }
+
+        }
+
+        ApplyOption(
+            emoji = "📱",
+            title = "Home & Lock Screen"
+        ) {
+
+            coroutineScope.launch(Dispatchers.IO) {
+
+                WallpaperManagerUtil.setBothWallpapersFromUrl(
+                    context,
+                    imageUrl
+                )
+
+                withContext(Dispatchers.Main) {
+
+                    Toast.makeText(
+                        context,
+                        "Wallpaper applied",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    onClose()
+                }
+            }
+
+        }
 
         ApplyOption(
             emoji = "❌",
@@ -328,6 +329,7 @@ fun ApplyWallpaperBottomSheet(
 
         Spacer(modifier = Modifier.height(8.dp))
     }
+}
 
 @Composable
 fun ApplyOption(
