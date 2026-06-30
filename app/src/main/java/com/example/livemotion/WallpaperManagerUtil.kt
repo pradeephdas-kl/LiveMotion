@@ -2,10 +2,12 @@ package com.example.livemotion.utils
 
 import android.app.WallpaperManager
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.DrawableRes
+import java.net.URL
 
 object WallpaperManagerUtil {
 
@@ -21,8 +23,7 @@ object WallpaperManagerUtil {
                 imageRes
             )
 
-            val wallpaperManager =
-                WallpaperManager.getInstance(context)
+            val wallpaperManager = WallpaperManager.getInstance(context)
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 
@@ -47,13 +48,50 @@ object WallpaperManagerUtil {
 
         } catch (e: Exception) {
 
+            e.printStackTrace()
+
             Toast.makeText(
                 context,
-                "Failed to apply wallpaper",
-                Toast.LENGTH_SHORT
+                e.message ?: "Unknown Error",
+                Toast.LENGTH_LONG
             ).show()
 
+        }
+
+    }
+
+    fun setHomeWallpaperFromUrl(
+        context: Context,
+        imageUrl: String
+    ) {
+
+        try {
+
+            val url = URL(imageUrl)
+            val bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream())
+
+            val wallpaperManager = WallpaperManager.getInstance(context)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+
+                wallpaperManager.setBitmap(
+                    bitmap,
+                    null,
+                    true,
+                    WallpaperManager.FLAG_SYSTEM
+                )
+
+            } else {
+
+                wallpaperManager.setBitmap(bitmap)
+
+            }
+
+
+        } catch (e: Exception) {
+
             e.printStackTrace()
+
 
         }
 
@@ -68,12 +106,11 @@ object WallpaperManagerUtil {
 
             Toast.makeText(
                 context,
-                "Lock screen wallpaper is not supported",
+                "Lock screen not supported",
                 Toast.LENGTH_SHORT
             ).show()
 
             return
-
         }
 
         try {
@@ -83,29 +120,23 @@ object WallpaperManagerUtil {
                 imageRes
             )
 
-            WallpaperManager.getInstance(context)
-                .setBitmap(
-                    bitmap,
-                    null,
-                    true,
-                    WallpaperManager.FLAG_LOCK
-                )
+            WallpaperManager.getInstance(context).setBitmap(
+                bitmap,
+                null,
+                true,
+                WallpaperManager.FLAG_LOCK
+            )
 
-            Toast.makeText(
-                context,
-                "Lock wallpaper applied",
-                Toast.LENGTH_SHORT
-            ).show()
 
         } catch (e: Exception) {
 
+            e.printStackTrace()
+
             Toast.makeText(
                 context,
-                "Failed to apply wallpaper",
-                Toast.LENGTH_SHORT
+                e.message ?: "Unknown Error",
+                Toast.LENGTH_LONG
             ).show()
-
-            e.printStackTrace()
 
         }
 
@@ -123,8 +154,7 @@ object WallpaperManagerUtil {
                 imageRes
             )
 
-            val wallpaperManager =
-                WallpaperManager.getInstance(context)
+            val wallpaperManager = WallpaperManager.getInstance(context)
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 
@@ -156,13 +186,102 @@ object WallpaperManagerUtil {
 
         } catch (e: Exception) {
 
+            e.printStackTrace()
+
             Toast.makeText(
                 context,
-                "Failed to apply wallpaper",
+                e.message ?: "Unknown Error",
+                Toast.LENGTH_LONG
+            ).show()
+
+        }
+
+    }
+
+    fun setLockWallpaperFromUrl(
+        context: Context,
+        imageUrl: String
+    ) {
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+
+            Toast.makeText(
+                context,
+                "Lock screen not supported",
                 Toast.LENGTH_SHORT
             ).show()
 
+            return
+        }
+
+        try {
+
+            val url = URL(imageUrl)
+            val bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream())
+
+            WallpaperManager.getInstance(context).setBitmap(
+                bitmap,
+                null,
+                true,
+                WallpaperManager.FLAG_LOCK
+            )
+
+
+        } catch (e: Exception) {
+
             e.printStackTrace()
+
+
+
+        }
+
+    }
+
+    fun setBothWallpapersFromUrl(
+        context: Context,
+        imageUrl: String
+    ) {
+
+        try {
+
+            val url = URL(imageUrl)
+            val bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream())
+
+            val wallpaperManager = WallpaperManager.getInstance(context)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+
+                wallpaperManager.setBitmap(
+                    bitmap,
+                    null,
+                    true,
+                    WallpaperManager.FLAG_SYSTEM
+                )
+
+                wallpaperManager.setBitmap(
+                    bitmap,
+                    null,
+                    true,
+                    WallpaperManager.FLAG_LOCK
+                )
+
+            } else {
+
+                wallpaperManager.setBitmap(bitmap)
+
+            }
+
+            Toast.makeText(
+                context,
+                "Wallpaper applied",
+                Toast.LENGTH_SHORT
+            ).show()
+
+        } catch (e: Exception) {
+
+            e.printStackTrace()
+
+
 
         }
 

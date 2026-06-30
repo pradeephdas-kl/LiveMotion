@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.livemotion.ui.screens.FavoritesScreen
 import com.example.livemotion.ui.screens.HomeScreen
 import com.example.livemotion.ui.screens.WallpaperPreviewScreen
 
@@ -25,19 +26,25 @@ fun AppNavigation() {
             )
         }
 
+        composable("favorites") {
+            FavoritesScreen(
+                navController = navController
+            )
+        }
+
         composable(
-            route = "preview/{image}",
+            route = "preview/{wallpaperId}",
             arguments = listOf(
-                navArgument("image") {
-                    type = NavType.IntType
+                navArgument("wallpaperId") {
+                    type = NavType.StringType
                 }
             )
         ) { backStackEntry ->
 
-            val image = backStackEntry.arguments?.getInt("image") ?: 0
+            val wallpaperId = backStackEntry.arguments?.getString("wallpaperId") ?: ""
 
             WallpaperPreviewScreen(
-                image = image,
+                wallpaperId = wallpaperId,
                 onBack = {
                     navController.popBackStack()
                 }
