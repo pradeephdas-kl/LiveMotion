@@ -43,17 +43,21 @@ import com.example.livemotion.utils.WallpaperUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import androidx.navigation.NavController
+import com.example.livemotion.data.FavoriteRepository
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WallpaperPreviewScreen(
     wallpaperId: String,
+    navController: NavController,
     onBack: () -> Unit
 ) {
 
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val firebaseRepository = remember { FirebaseRepository() }
+    val favoriteRepository = remember { FavoriteRepository(context) }
     val wallpaper = remember { mutableStateOf<Wallpaper?>(null) }
     val isLoading = remember { mutableStateOf(true) }
     val isFavorite = remember { mutableStateOf(false) }
@@ -67,7 +71,8 @@ fun WallpaperPreviewScreen(
                 val found = wallpapers.find { it.id == wallpaperId }
                 if (found != null) {
                     wallpaper.value = found
-                    isFavorite.value = false
+                    isFavorite.value =
+                        favoriteRepository.isFavorite(found.id)
                 }
                 isLoading.value = false
             } catch (e: Exception) {
@@ -164,9 +169,18 @@ fun WallpaperPreviewScreen(
                             text = "Favorite",
                             isFilled = isFavorite.value
                         ) {
+
                             coroutineScope.launch {
-                                isFavorite.value = !isFavorite.value
+
+                                wallpaper.value?.let { wallpaper ->
+
+                                    isFavorite.value =
+                                        favoriteRepository.toggle(wallpaper.id)
+
+                                }
+
                             }
+
                         }
 
                         ActionItem(
@@ -204,7 +218,20 @@ fun WallpaperPreviewScreen(
                             icon = Icons.Default.Wallpaper,
                             text = "Apply"
                         ) {
-                            showApplySheet.value = true
+
+                            wallpaper.value?.imageUrl?.let { url ->
+
+                                coroutineScope.launch(Dispatchers.IO) {
+
+                                    WallpaperUtils.openSystemWallpaperPicker(
+                                        context,
+                                        url
+                                    )
+
+                                }
+
+                            }
+
                         }
 
                     }

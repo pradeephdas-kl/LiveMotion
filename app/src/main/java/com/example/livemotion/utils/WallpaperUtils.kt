@@ -12,6 +12,11 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
 import java.net.URL
+import android.content.Intent
+import android.net.Uri
+import androidx.core.content.FileProvider
+import android.app.WallpaperManager
+import android.widget.Toast
 
 object WallpaperUtils {
 
@@ -144,6 +149,57 @@ object WallpaperUtils {
 
             e.printStackTrace()
             false
+
+        }
+
+    }
+
+    fun openSystemWallpaperPicker(
+        context: Context,
+        imageUrl: String
+    ) {
+
+        try {
+
+            val bitmap = BitmapFactory.decodeStream(
+                URL(imageUrl).openStream()
+            )
+
+            val file = File(
+                context.cacheDir,
+                "wallpaper.jpg"
+            )
+
+            FileOutputStream(file).use {
+                bitmap.compress(
+                    Bitmap.CompressFormat.JPEG,
+                    100,
+                    it
+                )
+            }
+
+            val uri = FileProvider.getUriForFile(
+                context,
+                context.packageName + ".provider",
+                file
+            )
+
+            val intent = Intent(WallpaperManager.ACTION_CROP_AND_SET_WALLPAPER).apply {
+                setDataAndType(uri, "image/*")
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+
+            context.startActivity(intent)
+
+        } catch (e: Exception) {
+
+            e.printStackTrace()
+
+            Toast.makeText(
+                context,
+                "Unable to open wallpaper picker",
+                Toast.LENGTH_SHORT
+            ).show()
 
         }
 

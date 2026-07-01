@@ -12,28 +12,28 @@ class FavoriteRepository(context: Context) {
         return dao.getAll()
     }
 
-    suspend fun isFavorite(imageRes: Int): Boolean {
-        return dao.isFavorite(imageRes)
+    suspend fun isFavorite(wallpaperId: String): Boolean {
+        return dao.isFavorite(wallpaperId)
     }
 
-    suspend fun add(imageRes: Int) {
+    suspend fun add(wallpaperId: String) {
         dao.insert(
-            FavoriteWallpaper(imageRes)
+            FavoriteWallpaper(wallpaperId)
         )
     }
 
-    suspend fun remove(imageRes: Int) {
+    suspend fun remove(wallpaperId: String) {
         dao.delete(
-            FavoriteWallpaper(imageRes)
+            FavoriteWallpaper(wallpaperId)
         )
     }
 
-    suspend fun toggle(imageRes: Int): Boolean {
+    suspend fun toggle(wallpaperId: String): Boolean {
 
-        return if (dao.isFavorite(imageRes)) {
+        return if (dao.isFavorite(wallpaperId)) {
 
             dao.delete(
-                FavoriteWallpaper(imageRes)
+                FavoriteWallpaper(wallpaperId)
             )
 
             false
@@ -41,7 +41,7 @@ class FavoriteRepository(context: Context) {
         } else {
 
             dao.insert(
-                FavoriteWallpaper(imageRes)
+                FavoriteWallpaper(wallpaperId)
             )
 
             true

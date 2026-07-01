@@ -7,6 +7,6 @@ import androidx.room.PrimaryKey
 data class FavoriteWallpaper(
 
     @PrimaryKey
-    val imageRes: Int
+    val wallpaperId: String
 
 )

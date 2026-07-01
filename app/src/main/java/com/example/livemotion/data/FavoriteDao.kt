@@ -12,8 +12,8 @@ interface FavoriteDao {
     @Query("SELECT * FROM favorite_wallpapers")
     suspend fun getAll(): List<FavoriteWallpaper>
 
-    @Query("SELECT EXISTS(SELECT 1 FROM favorite_wallpapers WHERE imageRes = :imageRes)")
-    suspend fun isFavorite(imageRes: Int): Boolean
+    @Query("SELECT EXISTS(SELECT 1 FROM favorite_wallpapers WHERE wallpaperId = :wallpaperId)")
+    suspend fun isFavorite(wallpaperId: String): Boolean
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(favoriteWallpaper: FavoriteWallpaper)
